@@ -1,0 +1,313 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": { "type": "string" },
+    "adminPassword": { "type": "securestring" }
+  },
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks','multitestVNet')]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/multitestSubnet')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "myPublicIPAddress1",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "myresourcegroupdns1"
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "myPublicIPAddress2",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "myresourcegroupdns2"
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "myPublicIPAddress3",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "myresourcegroupdns3"
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "myPublicIPAddress4",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "myresourcegroupdns4"
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "multitestVNet",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": { "addressPrefixes": [ "10.0.0.0/16" ] },
+        "subnets": [
+          {
+            "name": "multitestSubnet",
+            "properties": { "addressPrefix": "10.0.0.0/24" }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "myNic1",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses/', 'myPublicIPAddress1')]",
+        "[resourceId('Microsoft.Network/virtualNetworks/', 'multitestVNet')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIPAddresses','myPublicIPAddress1')]" },
+              "subnet": { "id": "[variables('subnetRef')]" }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "myNic2",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses/', 'myPublicIPAddress2')]",
+        "[resourceId('Microsoft.Network/virtualNetworks/', 'multitestVNet')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig2",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIPAddresses','myPublicIPAddress2')]" },
+              "subnet": { "id": "[variables('subnetRef')]" }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "myNic3",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses/', 'myPublicIPAddress3')]",
+        "[resourceId('Microsoft.Network/virtualNetworks/', 'multitestVNet')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig3",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIPAddresses','myPublicIPAddress3')]" },
+              "subnet": { "id": "[variables('subnetRef')]" }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "myNic4",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses/', 'myPublicIPAddress4')]",
+        "[resourceId('Microsoft.Network/virtualNetworks/', 'multitestVNet')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig4",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": { "id": "[resourceId('Microsoft.Network/publicIPAddresses','myPublicIPAddress4')]" },
+              "subnet": { "id": "[variables('subnetRef')]" }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "myVM1",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic1')]"
+      ],
+      "properties": {
+        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "osProfile": {
+          "computerName": "myVM1",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2012-R2-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "myManagedOSDisk1",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','myNic1')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "myVM2",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic2')]"
+      ],
+      "properties": {
+        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "osProfile": {
+          "computerName": "myVM2",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2012-R2-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "myManagedOSDisk2",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','myNic2')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "myVM3",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic3')]"
+      ],
+      "properties": {
+        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "osProfile": {
+          "computerName": "myVM3",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2012-R2-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "myManagedOSDisk3",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','myNic3')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "myVM4",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic4')]"
+      ],
+      "properties": {
+        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "osProfile": {
+          "computerName": "myVM4",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2012-R2-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "myManagedOSDisk4",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','myNic4')]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
