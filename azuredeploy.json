@@ -158,7 +158,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic1')]"
       ],
       "properties": {
-        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "hardwareProfile": { "vmSize": "Standard_D1_v2" },
         "osProfile": {
           "computerName": "myVM1",
           "adminUsername": "[parameters('adminUsername')]",
@@ -195,7 +195,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic2')]"
       ],
       "properties": {
-        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "hardwareProfile": { "vmSize": "Standard_D1_v2" },
         "osProfile": {
           "computerName": "myVM2",
           "adminUsername": "[parameters('adminUsername')]",
@@ -232,7 +232,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic3')]"
       ],
       "properties": {
-        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "hardwareProfile": { "vmSize": "Standard_D1_v2" },
         "osProfile": {
           "computerName": "myVM3",
           "adminUsername": "[parameters('adminUsername')]",
@@ -269,7 +269,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces/', 'myNic4')]"
       ],
       "properties": {
-        "hardwareProfile": { "vmSize": "Standard_DS1" },
+        "hardwareProfile": { "vmSize": "Standard_D1_v2" },
         "osProfile": {
           "computerName": "myVM4",
           "adminUsername": "[parameters('adminUsername')]",
